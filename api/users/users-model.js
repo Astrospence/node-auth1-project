@@ -2,17 +2,20 @@ const db = require('../../data/db-config')
 /**
   resolves to an ARRAY with all users, each user having { user_id, username }
  */
-function find() {
-  return db.select('user_id', 'username').from('users')
+async function find() {
+  const response = await db.select('user_id', 'username').from('users')
+  return response
 }
 
 /**
   resolves to an ARRAY with all users that match the filter condition
  */
-function findBy(filter) {
-  return db.select(filter)
+async function findBy(param, value) {
+  const user = await db.select('user_id', 'username')
     .from('users')
-    .where(`${filter}`)
+    .where(`${param}`, value)
+    .first()
+  return user
 }
 
 /**

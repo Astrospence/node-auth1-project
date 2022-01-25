@@ -8,6 +8,7 @@ const AuthHelpers = require('../users/users-model')
   }
 */
 function restricted(req, res, next) {
+  console.log('enter restricted middleware')
   if (!req.session.user) {
     next({ status: 401, message: 'You shall not pass!' })
   } else {
@@ -24,12 +25,17 @@ function restricted(req, res, next) {
   }
 */
 async function checkUsernameFree(req, res, next) {
-  const existingUser = await AuthHelpers.findBy({ username: req.body.username })
-
-  if (existingUser) {
-    next({ status: 422, message: 'Username taken' })
-  } else {
-    next()
+  try {
+    console.log('enter checkUsernameFree middleware')
+    const existingUser = await AuthHelpers.findBy('username', req.body.username)
+  
+    if (existingUser) {
+      next({ status: 422, message: 'Username taken' })
+    } else {
+      next()
+    }
+  } catch(err) {
+    next(err)
   }
 }
 
@@ -42,6 +48,7 @@ async function checkUsernameFree(req, res, next) {
   }
 */
 async function checkUsernameExists(req, res, next) {
+  console.log('enter checkUsernameExists middleware')
   const existingUser = await AuthHelpers.findBy({ username: req.body.username })
 
   if (!existingUser) {
@@ -60,9 +67,10 @@ async function checkUsernameExists(req, res, next) {
   }
 */
 function checkPasswordLength(req, res, next) {
+  console.log('enter checkPasswordLength middleware')
   const { password } = req.body
 
-  if (!password || password.length() < 4) {
+  if (!password || password.length < 4) {
     next({ status: 422, message: 'Password must be longer than 3 chars' })
   } else {
     next()
