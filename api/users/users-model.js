@@ -3,7 +3,7 @@ const db = require('../../data/db-config')
   resolves to an ARRAY with all users, each user having { user_id, username }
  */
 async function find() {
-  const response = await db.select('user_id', 'username').from('users')
+  const response = await db('users').select('user_id', 'username')
   return response
 }
 
@@ -11,7 +11,7 @@ async function find() {
   resolves to an ARRAY with all users that match the filter condition
  */
 async function findBy(param, value) {
-  const user = await db.select('user_id', 'username')
+  const user = await db('users')
     .from('users')
     .where(`${param}`, value)
     .first()
@@ -32,11 +32,9 @@ function findById(user_id) {
  */
 async function add(user) {
   await db('users').insert(user)
-  
   const response = await db('users')
     .where('username', user.username)
     .first()
-
   return response
 }
 

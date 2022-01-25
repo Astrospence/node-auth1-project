@@ -28,8 +28,8 @@ const Helpers = require('./users-model')
  */
 router.get('/', restricted, (req, res, next) => {
   Helpers.find()
-    .then(res => {
-      res.status(200).json(res)
+    .then(response => {
+      res.status(200).json(response)
     })
     .catch(next)
 })
